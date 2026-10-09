@@ -3,117 +3,901 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexShop</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#100d19">
+    <title>NexShop — Digital Store</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
+        :root {
+            --bg: #100d19;
+            --panel: #191424;
+            --card: #1d172b;
+            --border: #30253f;
+            --purple: #9b6bff;
+            --purple-light: #b99aff;
+            --text: #f6f2ff;
+            --muted: #a49ab5;
+            --green: #72e6b1;
+        }
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            padding: 24px 18px;
-            font-family: Arial, sans-serif;
-            background: #f7f8fa;
-            color: #20242c;
+            padding: 0 0 32px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Arial, sans-serif;
         }
 
-        h1 {
-            margin-bottom: 8px;
+        button, input {
+            font: inherit;
         }
 
-        .subtitle {
-            color: #737985;
-            margin-bottom: 28px;
+        button {
+            cursor: pointer;
+        }
+
+        .container {
+            width: min(100% - 32px, 900px);
+            margin: auto;
+        }
+
+        .header {
+            padding: 25px 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #b18aff, #7541e8);
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 5px 25px #8b5cf633;
+        }
+
+        .status {
+            font-size: 11px;
+            color: var(--green);
+            background: #72e6b110;
+            border: 1px solid #72e6b12b;
+            border-radius: 20px;
+            padding: 7px 10px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 26px 23px;
+            border: 1px solid #62409a55;
+            border-radius: 23px;
+            background:
+                radial-gradient(ellipse at 100% 0%,
+                    #7944c744, transparent 55%),
+                linear-gradient(135deg, #241735, #171122);
+        }
+
+        .eyebrow {
+            color: var(--purple-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .hero h1 {
+            margin: 13px 0 10px;
+            font-size: clamp(28px, 7vw, 40px);
+            line-height: 1.12;
+            letter-spacing: -1.2px;
+        }
+
+        .hero h1 span {
+            color: var(--purple-light);
+        }
+
+        .hero p {
+            max-width: 380px;
+            margin: 0;
+            color: #b8accb;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .hero-bottom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 22px;
+            font-size: 11px;
+            color: #c8bdd9;
+        }
+
+        .hero-bottom span {
+            border: 1px solid #ffffff16;
+            border-radius: 8px;
+            padding: 7px 9px;
+            background: #ffffff07;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 29px 0 15px;
+        }
+
+        .section-heading h2 {
+            font-size: 19px;
+            margin: 0;
+            letter-spacing: -0.4px;
+        }
+
+        .count {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 0 14px;
+            margin-bottom: 14px;
+        }
+
+        .search span {
+            color: var(--muted);
+            font-size: 19px;
+        }
+
+        .search input {
+            width: 100%;
+            min-width: 0;
+            padding: 14px 0;
+            outline: none;
+            border: 0;
+            background: transparent;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .search input::placeholder {
+            color: #81758f;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+        }
+
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter {
+            flex: 0 0 auto;
+            padding: 9px 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel);
+            color: #b9afc9;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .filter.active {
+            background: #8b5cf622;
+            border-color: #9b6bff99;
+            color: var(--purple-light);
         }
 
         .products {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
+            gap: 12px;
+            margin-top: 16px;
         }
 
         .product {
-            padding: 18px 12px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 3px 14px #00000008;
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: var(--card);
+            transition: transform 0.2s, border-color 0.2s;
         }
 
-        .emoji {
-            font-size: 38px;
+        .product:active {
+            transform: scale(0.98);
+        }
+
+        .product-art {
+            height: 125px;
+            display: grid;
+            place-items: center;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 50% 65%,
+                    var(--glow), transparent 65%),
+                var(--art-bg);
+        }
+
+        .product-art::before {
+            content: "";
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 1px solid #ffffff16;
+            border-radius: 25px;
+            transform: rotate(35deg);
+        }
+
+        .product-emoji {
+            position: relative;
+            font-size: 49px;
+            filter: drop-shadow(0 8px 15px #0005);
+        }
+
+        .tag {
+            position: absolute;
+            left: 9px;
+            top: 9px;
+            padding: 5px 7px;
+            border: 1px solid #ffffff15;
+            border-radius: 7px;
+            background: #100d19bb;
+            color: #e2d6ff;
+            font-size: 9px;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-category {
+            font-size: 9px;
+            color: var(--purple-light);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
         }
 
         .product h3 {
-            font-size: 16px;
-            margin: 12px 0 6px;
+            font-size: 13px;
+            line-height: 1.4;
+            min-height: 36px;
+            margin: 7px 0 5px;
+        }
+
+        .description {
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--muted);
+            min-height: 33px;
+            margin: 0 0 13px;
+        }
+
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
         }
 
         .price {
-            color: #5555d9;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
-        button {
-            width: 100%;
-            border: none;
-            border-radius: 10px;
-            padding: 11px;
-            margin-top: 12px;
-            background: #5555d9;
+        .price small {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .view-btn {
+            border: 0;
+            border-radius: 9px;
+            padding: 9px 10px;
+            background: #8b5cf622;
+            color: var(--purple-light);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .view-btn:active,
+        .primary-btn:active {
+            opacity: 0.8;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            padding: 35px 10px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .empty div {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #766b85;
+            font-size: 11px;
+            padding: 32px 0 0;
+            line-height: 1.8;
+        }
+
+        .footer strong {
+            color: #b5a4d2;
+        }
+
+        /* Вікно з інформацією про товар */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            background: #000a;
+            padding: 12px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            position: relative;
+            width: min(100%, 520px);
+            max-height: 88vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 23px;
+            background: #171221;
+            padding: 20px;
+            animation: appear 0.18s ease-out;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 1;
+            width: 35px;
+            height: 35px;
+            border: 1px solid #ffffff18;
+            border-radius: 11px;
+            background: #100d19cc;
             color: white;
-            font-weight: bold;
-            cursor: pointer;
+            font-size: 20px;
         }
 
-        #message {
-            margin-top: 20px;
-            color: #5555d9;
+        .modal-art {
+            height: 160px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            background:
+                radial-gradient(circle, var(--glow), transparent 70%),
+                var(--art-bg);
+        }
+
+        .modal-art span {
+            font-size: 66px;
+        }
+
+        .modal-content h2 {
+            font-size: 23px;
+            margin: 8px 0;
+        }
+
+        .modal-description {
+            color: #b6abc5;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .modal-price {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 18px 0;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(110deg, #a77aff, #7944e8);
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .notice {
+            margin-top: 12px;
+            border: 1px solid #9b6bff33;
+            border-radius: 11px;
+            padding: 11px;
+            background: #9b6bff0c;
+            color: #cbb8f1;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (min-width: 620px) {
+            .products {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            .product-art {
+                height: 150px;
+            }
+
+            .hero {
+                padding: 35px;
+            }
+
+            .modal {
+                align-items: center;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>🛍️ NexShop</h1>
-    <p class="subtitle">Цифрові товари в одному місці</p>
+    <div class="container">
+        <header class="header">
+            <div class="brand">
+                <div class="logo">N</div>
+                <span>NexShop</span>
+            </div>
+            <div class="status">● DIGITAL STORE</div>
+        </header>
 
-    <div class="products">
-        <article class="product">
-            <div class="emoji">📘</div>
-            <h3>Електронна книга</h3>
-            <p>Навчальний цифровий матеріал</p>
-            <div class="price">149 грн</div>
-            <button onclick="chooseProduct('Електронна книга')">
-                Обрати
-            </button>
-        </article>
+        <section class="hero">
+            <div class="eyebrow">Your digital space</div>
+            <h1>Цифрові продукти.<br><span>Нові можливості.</span></h1>
+            <p>
+                Шаблони, корисні файли та цифрові матеріали
+                в одному зручному магазині.
+            </p>
+            <div class="hero-bottom">
+                <span>✦ Цифрові товари</span>
+                <span>⚡ Зручний каталог</span>
+            </div>
+        </section>
 
-        <article class="product">
-            <div class="emoji">🎨</div>
-            <h3>Дизайн-шаблони</h3>
-            <p>Набір шаблонів для проєктів</p>
-            <div class="price">199 грн</div>
-            <button onclick="chooseProduct('Дизайн-шаблони')">
-                Обрати
-            </button>
-        </article>
+        <section>
+            <div class="section-heading">
+                <h2>Каталог</h2>
+                <span class="count" id="count">0 товарів</span>
+            </div>
+
+            <label class="search">
+                <span>⌕</span>
+                <input
+                    id="search"
+                    type="search"
+                    placeholder="Знайти цифровий продукт..."
+                    autocomplete="off"
+                >
+            </label>
+
+            <div class="filters" id="filters">
+                <button class="filter active" data-category="all">
+                    Усі товари
+                </button>
+                <button class="filter" data-category="templates">
+                    🎨 Шаблони
+                </button>
+                <button class="filter" data-category="files">
+                    📁 Файли
+                </button>
+                <button class="filter" data-category="learning">
+                    📚 Навчання
+                </button>
+            </div>
+
+            <div class="products" id="products"></div>
+        </section>
+
+        <footer class="footer">
+            <strong>NexShop</strong> · Digital Store<br>
+            Демонстраційний каталог · 2026
+        </footer>
     </div>
 
-    <p id="message"></p>
+    <div class="modal" id="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog"
+             aria-modal="true" aria-labelledby="modalTitle">
+            <button class="close-btn" id="closeModal"
+                    aria-label="Закрити">×</button>
+
+            <div class="modal-art" id="modalArt">
+                <span id="modalEmoji">📦</span>
+            </div>
+
+            <div class="product-category" id="modalCategory"></div>
+            <h2 id="modalTitle">Назва товару</h2>
+            <div class="modal-description" id="modalDescription"></div>
+            <div class="modal-price" id="modalPrice"></div>
+
+            <button class="primary-btn" id="buyButton">
+                Придбати
+            </button>
+
+            <div class="notice" id="notice">
+                Це демонстраційний товар. Онлайн-оплата та видача
+                ще не підключені.
+            </div>
+        </div>
+    </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
+        const tg = window.Telegram?.WebApp;
 
-        function chooseProduct(name) {
-            document.getElementById("message").textContent =
-                "Ти обрав: " + name +
-                ". Оформлення замовлення додамо наступним кроком.";
+        if (tg) {
+            tg.ready();
+            tg.expand();
+
+            try {
+                tg.setHeaderColor("#100d19");
+                tg.setBackgroundColor("#100d19");
+            } catch (error) {
+                // Деякі клієнти Telegram можуть не підтримувати ці методи.
+            }
         }
+
+        // Демонстраційні товари.
+        // Згодом замінимо їх на реальні товари магазину.
+
+        const productsData = [
+            {
+                id: 1,
+                name: "Пак шаблонів для дизайну",
+                category: "templates",
+                categoryName: "Шаблони",
+                emoji: "🎨",
+                price: 149,
+                description: "Колекція шаблонів для особистих і творчих проєктів.",
+                details:
+                    "Пак шаблонів для твоїх проєктів.\n\n" +
+                    "• Зручна основа для власного дизайну\n" +
+                    "• Цифровий формат\n" +
+                    "• Склад і сумісність файлів потрібно уточнити перед продажем.",
+                tag: "ПОПУЛЯРНЕ",
+                artBg: "#241739",
+                glow: "#a45cff44"
+            },
+            {
+                id: 2,
+                name: "Набір іконок",
+                category: "files",
+                categoryName: "Файли",
+                emoji: "💎",
+                price: 79,
+                description: "Декоративні іконки для цифрових проєктів.",
+                details:
+                    "Набір іконок для оформлення твоїх проєктів.\n\n" +
+                    "• Цифровий набір\n" +
+                    "• Можна використовувати як основу для макетів\n" +
+                    "• Формати файлів уточнюються.",
+                tag: "",
+                artBg: "#18243b",
+                glow: "#5798ff3d"
+            },
+            {
+                id: 3,
+                name: "Навчальний гайд",
+                category: "learning",
+                categoryName: "Навчання",
+                emoji: "📚",
+                price: 99,
+                description: "Структурований матеріал для самостійного навчання.",
+                details:
+                    "Навчальний цифровий матеріал.\n\n" +
+                    "• Матеріал для самостійного опрацювання\n" +
+                    "• Зручна структура\n" +
+                    "• Точну тему та формат гайда додамо перед публікацією.",
+                tag: "",
+                artBg: "#30203a",
+                glow: "#df7bff36"
+            },
+            {
+                id: 4,
+                name: "Пак фонів",
+                category: "files",
+                categoryName: "Файли",
+                emoji: "🌌",
+                price: 59,
+                description: "Фони для оформлення робочого простору та проєктів.",
+                details:
+                    "Колекція цифрових фонів.\n\n" +
+                    "• Декоративні зображення\n" +
+                    "• Підходять для оформлення власних проєктів\n" +
+                    "• Роздільну здатність і кількість зображень уточнимо.",
+                tag: "",
+                artBg: "#252044",
+                glow: "#8e72ff40"
+            },
+            {
+                id: 5,
+                name: "Шаблон планувальника",
+                category: "templates",
+                categoryName: "Шаблони",
+                emoji: "🗓️",
+                price: 89,
+                description: "Шаблон для організації завдань і планів.",
+                details:
+                    "Цифровий шаблон планувальника.\n\n" +
+                    "• Організація завдань\n" +
+                    "• Планування проєктів\n" +
+                    "• Сумісні програми та формат файлу уточнимо.",
+                tag: "",
+                artBg: "#19332f",
+                glow: "#5ce0b344"
+            },
+            {
+                id: 6,
+                name: "Пак елементів для контенту",
+                category: "templates",
+                categoryName: "Шаблони",
+                emoji: "✨",
+                price: 129,
+                description: "Графічні елементи для оформлення контенту.",
+                details:
+                    "Набір елементів для творчих цифрових проєктів.\n\n" +
+                    "• Для оформлення контенту\n" +
+                    "• Можливість комбінувати елементи\n" +
+                    "• Точний склад набору додамо після підготовки товару.",
+                tag: "НОВИНКА",
+                artBg: "#35213b",
+                glow: "#e47bff35"
+            }
+        ];
+
+        const productsElement = document.getElementById("products");
+        const searchInput = document.getElementById("search");
+        const countElement = document.getElementById("count");
+        const modal = document.getElementById("modal");
+
+        let activeCategory = "all";
+        let selectedProduct = null;
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        function renderProducts() {
+            const query = searchInput.value.trim().toLowerCase();
+
+            const filtered = productsData.filter(product => {
+                const matchesCategory =
+                    activeCategory === "all" ||
+                    product.category === activeCategory;
+
+                const matchesSearch =
+                    product.name.toLowerCase().includes(query) ||
+                    product.description.toLowerCase().includes(query) ||
+                    product.categoryName.toLowerCase().includes(query);
+
+                return matchesCategory && matchesSearch;
+            });
+
+            countElement.textContent =
+                filtered.length +
+                (filtered.length === 1 ? " товар" :
+                    filtered.length >= 2 && filtered.length <= 4
+                        ? " товари" : " товарів");
+
+            if (filtered.length === 0) {
+                productsElement.innerHTML = `
+                    <div class="empty">
+                        <div>🔎</div>
+                        Нічого не знайдено.<br>
+                        Спробуй інший запит.
+                    </div>
+                `;
+                return;
+            }
+
+            productsElement.innerHTML = filtered.map(product => `
+                <article class="product">
+                    <div class="product-art"
+                         style="--art-bg:${product.artBg};
+                                --glow:${product.glow}">
+                        ${product.tag
+                            ? `<span class="tag">${escapeHTML(product.tag)}</span>`
+                            : ""}
+                        <span class="product-emoji">${product.emoji}</span>
+                    </div>
+
+                    <div class="product-info">
+                        <div class="product-category">
+                            ${escapeHTML(product.categoryName)}
+                        </div>
+                        <h3>${escapeHTML(product.name)}</h3>
+                        <p class="description">
+                            ${escapeHTML(product.description)}
+                        </p>
+                        <div class="product-bottom">
+                            <div class="price">
+                                ${product.price}
+                                <small>грн</small>
+                            </div>
+                            <button class="view-btn"
+                                    data-product-id="${product.id}">
+                                Деталі ↗
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function openProduct(productId) {
+            const product = productsData.find(
+                item => item.id === productId
+            );
+
+            if (!product) return;
+
+            selectedProduct = product;
+
+            document.getElementById("modalArt").style.setProperty(
+                "--art-bg", product.artBg
+            );
+            document.getElementById("modalArt").style.setProperty(
+                "--glow", product.glow
+            );
+
+            document.getElementById("modalEmoji").textContent =
+                product.emoji;
+            document.getElementById("modalCategory").textContent =
+                product.categoryName;
+            document.getElementById("modalTitle").textContent =
+                product.name;
+            document.getElementById("modalDescription").textContent =
+                product.details;
+            document.getElementById("modalPrice").textContent =
+                product.price + " грн";
+
+            document.getElementById("notice").textContent =
+                "Це демонстраційний товар. Онлайн-оплата та автоматична " +
+                "видача ще не підключені.";
+
+            modal.classList.add("open");
+            modal.setAttribute("aria-hidden", "false");
+
+            if (tg?.BackButton) {
+                tg.BackButton.show();
+                tg.BackButton.onClick(closeProduct);
+            }
+        }
+
+        function closeProduct() {
+            modal.classList.remove("open");
+            modal.setAttribute("aria-hidden", "true");
+
+            if (tg?.BackButton) {
+                tg.BackButton.hide();
+                tg.BackButton.offClick(closeProduct);
+            }
+        }
+
+        document.getElementById("filters").addEventListener(
+            "click", event => {
+                const button = event.target.closest("[data-category]");
+                if (!button) return;
+
+                activeCategory = button.dataset.category;
+
+                document.querySelectorAll(".filter").forEach(item => {
+                    item.classList.toggle("active", item === button);
+                });
+
+                renderProducts();
+            }
+        );
+
+        productsElement.addEventListener("click", event => {
+            const button = event.target.closest("[data-product-id]");
+            if (!button) return;
+
+            openProduct(Number(button.dataset.productId));
+        });
+
+        searchInput.addEventListener("input", renderProducts);
+
+        document.getElementById("closeModal").addEventListener(
+            "click", closeProduct
+        );
+
+        modal.addEventListener("click", event => {
+            if (event.target === modal) closeProduct();
+        });
+
+        document.getElementById("buyButton").addEventListener(
+            "click", () => {
+                if (tg?.showAlert) {
+                    tg.showAlert(
+                        "Покупки ще не підключені. " +
+                        "Це демонстраційна версія NexShop."
+                    );
+                } else {
+                    alert(
+                        "Покупки ще не підключені. " +
+                        "Це демонстраційна версія NexShop."
+                    );
+                }
+            }
+        );
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") closeProduct();
+        });
+
+        renderProducts();
     </script>
 </body>
 </html>
