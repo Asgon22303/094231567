@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexShop</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 18px;
+            font-family: Arial, sans-serif;
+            background: #f7f8fa;
+            color: #20242c;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #737985;
+            margin-bottom: 28px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .product {
+            padding: 18px 12px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 3px 14px #00000008;
+        }
+
+        .emoji {
+            font-size: 38px;
+        }
+
+        .product h3 {
+            font-size: 16px;
+            margin: 12px 0 6px;
+        }
+
+        .price {
+            color: #5555d9;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            margin-top: 12px;
+            background: #5555d9;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: #5555d9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🛍️ NexShop</h1>
+    <p class="subtitle">Цифрові товари в одному місці</p>
+
+    <div class="products">
+        <article class="product">
+            <div class="emoji">📘</div>
+            <h3>Електронна книга</h3>
+            <p>Навчальний цифровий матеріал</p>
+            <div class="price">149 грн</div>
+            <button onclick="chooseProduct('Електронна книга')">
+                Обрати
+            </button>
+        </article>
+
+        <article class="product">
+            <div class="emoji">🎨</div>
+            <h3>Дизайн-шаблони</h3>
+            <p>Набір шаблонів для проєктів</p>
+            <div class="price">199 грн</div>
+            <button onclick="chooseProduct('Дизайн-шаблони')">
+                Обрати
+            </button>
+        </article>
+    </div>
+
+    <p id="message"></p>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        function chooseProduct(name) {
+            document.getElementById("message").textContent =
+                "Ти обрав: " + name +
+                ". Оформлення замовлення додамо наступним кроком.";
+        }
+    </script>
+</body>
+</html>
